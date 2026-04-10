@@ -6,7 +6,7 @@ const mealsSchema = new mongoose.Schema({
         ref: "Nutrition",
         required: true
     },
-    type: {
+    mealType: {
         type: String,
         enum: ["breakfast", "lunch", "dinner", "snack"],
         required: true

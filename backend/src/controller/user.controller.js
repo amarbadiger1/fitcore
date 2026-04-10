@@ -1,3 +1,4 @@
+import nutritionModel from "../models/nutrition.model.js";
 import userModel from "../models/user.model.js";
 import { updateProfileSchema } from "../validations/user.validation.js";
 
@@ -27,7 +28,7 @@ export const updateProfile = async (req, res) => {
       ...validation.data
     };
 
-    const { gender, age, weight, height, goal, activityLevel } = updatedData;
+    const { gender, age, weight, height, goal, activityLevel, waterIntake } = updatedData;
 
     let calories, protein, fats, carbs;
 
