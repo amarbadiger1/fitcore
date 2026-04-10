@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { ToastContainer } from "react-toastify"
 import Register from "./pages/Register";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
@@ -24,8 +24,20 @@ const App = () => {
           <Route path="/features" element={<Features />} />
           <Route path="/workouts" element={<Workout />} />
           <Route path="/stories" element={<Stories />} />
-          <Route path="/pricing" element={<Pricing/>} />
+          <Route path="/pricing" element={<Pricing />} />
         </Routes>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={2000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable
+          pauseOnHover
+          theme="light"
+          />
       </div>
     </BrowserRouter>
   );

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import API from "../services/api";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -10,9 +12,24 @@ const Register = () => {
     password: ""
   })
 
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
-    console.log(data);
+    try {
+      // console.log(data);
+      const res = await API.post("/auth/register", data)
+      // console.log(res.data);
+      setData(prev => ({
+        ...prev, firstname: "",
+        lastname: "",
+        email: "",
+        password: ""
+      }))
+      toast.success(res.data.message)
+    } catch (error) {
+      const err = error?.response?.data?.message
+      // console.log(error?.response);
+      toast.error(err);
+    }
   }
 
   return (

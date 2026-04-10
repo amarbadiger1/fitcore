@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import API from "../services/api";
 
 const Login = () => {
   const navigate = useNavigate()
@@ -8,6 +10,18 @@ const Login = () => {
     email: "",
     password: ""
   })
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await API.post("/auth/login", data);
+      toast.success(res.data.message);
+    } catch (error) {
+      const err = error?.response?.data?.message;
+      toast.error(err);
+    }
+  }
+
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-100 px-4">
@@ -24,7 +38,7 @@ const Login = () => {
           </p>
 
           {/* FORM */}
-          <form className="flex flex-col gap-4">
+          <form onSubmit={handleClick} className="flex flex-col gap-4">
 
             <input
               type="email"

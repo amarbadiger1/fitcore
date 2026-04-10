@@ -17,28 +17,37 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true,
         trim: true,
+        match: [/^\S+@\S+\.\S+$/, "Please use a valid email"]
     },
     password: {
         type: String,
         required: [true, "Password is required"],
     },
+    profilePic: {
+        type: String,
+        default: ""
+    },
     age: {
         type: Number,
         min: 10,
-        max: 100
+        max: 100,
+        default: 0
     },
     weight: {
         type: Number,
         min: 20,
-        max: 300
+        max: 300,
+        default: 0
     },
     height: {
         type: Number,
         min: 100,
-        max: 250
+        max: 250,
+        default: 0
     },
     gender: {
         type: String,
+        enum: ["male", "female"]
     },
     goal: {
         type: String,
@@ -49,16 +58,20 @@ const userSchema = new mongoose.Schema({
         enum: ["low", "medium", "high"],
     },
     dailyCalorieTarget: {
-        type: Number
+        type: Number,
+        default: 0
     },
     protein: {
-        type: Number
+        type: Number,
+        default: 0
     },
     carbs: {
-        type: Number
+        type: Number,
+        default: 0
     },
     fats: {
-        type: Number
+        type: Number,
+        default: 0
     }
 },
     {
@@ -66,6 +79,6 @@ const userSchema = new mongoose.Schema({
     }
 )
 
-const userModel = mongoose.model("users", userSchema);
+const userModel = mongoose.model("User", userSchema);
 
 export default userModel;

@@ -53,7 +53,7 @@ export const login = async (req, res) => {
         const validation = loginSchema.safeParse({ email, password })
 
         if (!validation.success) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: "Inputs are not valid",
                 error: validation.error.errors
             })
