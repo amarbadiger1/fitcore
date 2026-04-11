@@ -18,7 +18,7 @@ const workouts = [
   },
 ];
 
-const Workout = () => {
+const Workouts = () => {
   return (
     <div className="w-full bg-white py-20 px-4">
 
@@ -58,4 +58,4 @@ const Workout = () => {
   );
 };
 
-export default Workout;
+export default Workouts;

@@ -7,9 +7,14 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Pricing from "./components/Pricing"
 import Features from "./components/Features"
-import Workout from "./components/Workout"
 import Stories from "./components/Stories"
-
+import Onboarding from "./pages/Onboarding";
+import Dashboard from "./pages/Dashboard";
+import Nutrition from "./pages/Nutrition";
+import Workouts from "./components/Workouts";
+import Workout from "./pages/Workout";
+import Progress from "./pages/Progress";
+import Profile from "./pages/Profile";
 const App = () => {
   return (
     <BrowserRouter>
@@ -22,9 +27,15 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/features" element={<Features />} />
-          <Route path="/workouts" element={<Workout />} />
+          <Route path="/workouts" element={<Workouts />} />
           <Route path="/stories" element={<Stories />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/nutrition" element={<Nutrition />} />
+          <Route path="/workout" element={<Workout />} />
+          <Route path="/progress" element={<Progress />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <ToastContainer
           position="bottom-center"
@@ -37,7 +48,7 @@ const App = () => {
           draggable
           pauseOnHover
           theme="light"
-          />
+        />
       </div>
     </BrowserRouter>
   );
