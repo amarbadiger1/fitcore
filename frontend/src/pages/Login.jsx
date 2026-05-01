@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import API from "../services/api";
 
-const Login = () => {
+const Login = ({ setIsAuth }) => {
+
   const navigate = useNavigate()
 
   const [data, setData] = useState({
@@ -16,8 +17,12 @@ const Login = () => {
     try {
       const res = await API.post("/auth/login", data);
       toast.success(res.data.message);
+      // console.log(res.data.token);
+      localStorage.setItem("token", res.data.token);
+      setIsAuth(true);   // 🔥 THIS updates navbar instantly
+      navigate("/dashboard")
     } catch (error) {
-      const err = error?.response?.data?.message;
+      const err = error?.response?.data?.message || "Someting Went Wrong";
       toast.error(err);
     }
   }

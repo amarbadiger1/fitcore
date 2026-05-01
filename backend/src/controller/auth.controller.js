@@ -1,8 +1,10 @@
 import { registerSchema, loginSchema } from "../validations/user.validation.js";
 import userModel from "../models/user.model.js"
-import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
 import config from "../config/config.js";
+import jwt from "jsonwebtoken"
+import bcrypt from "bcrypt"
+
+
 export const register = async (req, res) => {
     try {
         const { firstname, lastname, email, password } = req.body
@@ -32,6 +34,7 @@ export const register = async (req, res) => {
             email,
             password: hashedPassword,
         })
+
         return res.status(201).json({
             message: "User created successfully",
         });
@@ -83,14 +86,20 @@ export const login = async (req, res) => {
             maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
         });
 
+        const data = {
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+        }
 
         return res.status(200).json({
-            message: "Login successful"
+            message: "Login successful",
+            data,
+            token
         });
 
     } catch (error) {
         console.log(error);
-
         return res.status(500).json({
             message: "Internal Server Error"
         });

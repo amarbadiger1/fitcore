@@ -4,6 +4,7 @@ import { addMeal, getNutritionDetails } from "../controller/nutrition.controller
 const router = express.Router();
 
 router.get("/getnutritiondetails", jwtVerification, getNutritionDetails)
+
 router.post("/addmeal",jwtVerification,addMeal)
 
 

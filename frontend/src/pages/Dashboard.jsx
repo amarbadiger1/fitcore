@@ -4,8 +4,13 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { useRecoilValue } from "recoil";
+import { authAtom } from "../store/authAtom";
 
 const Dashboard = () => {
+
+  const auth = useRecoilValue(authAtom);
+
   // 🔥 Dummy Data
   const [data, setData] = useState({
     calories: {
@@ -46,11 +51,12 @@ const Dashboard = () => {
   const filledBars = Math.round(
     (data.water.current / data.water.goal) * waterBars
   );
+  console.log(auth.user);
 
   return (
     <div className="w-full bg-[#f5f6f8]">
+      {auth.isAuthenticated}
       <div className="min-h-screen w-10/12 mx-auto p-4 md:p-6">
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
           {/* CALORIES CARD */}
@@ -113,9 +119,8 @@ const Dashboard = () => {
               {[...Array(waterBars)].map((_, i) => (
                 <div
                   key={i}
-                  className={`w-6 h-16 rounded-full ${
-                    i < filledBars ? "bg-blue-300" : "bg-gray-200"
-                  }`}
+                  className={`w-6 h-16 rounded-full ${i < filledBars ? "bg-blue-300" : "bg-gray-200"
+                    }`}
                 ></div>
               ))}
             </div>
