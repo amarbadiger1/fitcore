@@ -29,19 +29,16 @@ const userSchema = new mongoose.Schema({
     },
     age: {
         type: Number,
-        min: 10,
         max: 100,
         default: 0
     },
     weight: {
         type: Number,
-        min: 20,
         max: 300,
         default: 0
     },
     height: {
         type: Number,
-        min: 100,
         max: 250,
         default: 0
     },

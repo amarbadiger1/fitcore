@@ -24,7 +24,10 @@ const Register = () => {
         email: "",
         password: ""
       }))
+      
       toast.success(res.data.message)
+
+      navigate("/login")
     } catch (error) {
       const err = error?.response?.data?.message
       // console.log(error?.response);

@@ -1,26 +1,29 @@
 import nutritionModel from "../models/nutrition.model.js"
 import mealsModel from "../models/meals.model.js"
 import mealItemModel from "../models/mealsItem.model.js"
-export const getNutritionDetails = async (req, res) => {
+
+export const addMeal = async (req, res) => {
     try {
-        const userId = req.userId; // make sure middleware sets this
+        const userId = req.id;
+        const { mealType, name, calories, protein, carbs, fats, quantity } = req.body;
 
-        const { type, name, photo, quantity, calories, protein, carbs, fats } = req.body;
+        //  STEP 1: Get today's range
+        const start = new Date();
+        start.setHours(0, 0, 0, 0);
 
-        // ✅ Get today's date (start of day)
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const end = new Date();
+        end.setHours(23, 59, 59, 999);
 
-        // ✅ 1. Find or Create Nutrition (per day)
-        const nutrition = await nutritionModel.findOneAndUpdate(
+        //  STEP 2: Find or create today's nutrition
+        let nutrition = await nutritionModel.findOneAndUpdate(
             {
                 userId,
-                date: today
+                date: { $gte: start, $lte: end }
             },
             {
                 $setOnInsert: {
                     userId,
-                    date: today,
+                    date: new Date(),
                     totalCalories: 0,
                     totalProtein: 0,
                     totalCarbs: 0,
@@ -28,49 +31,49 @@ export const getNutritionDetails = async (req, res) => {
                 }
             },
             {
-                upsert: true,
-                new: true
+                new: true,
+                upsert: true
             }
         );
 
-        // ✅ 2. Find or Create Meal (breakfast/lunch/dinner/snacks)
+        //  STEP 3: Find or create meal type (Breakfast/Lunch/etc.)
         let meal = await mealsModel.findOne({
             nutritionId: nutrition._id,
-            mealType: type
+            mealType
         });
 
         if (!meal) {
             meal = await mealsModel.create({
                 nutritionId: nutrition._id,
-                mealType: type
+                mealType
             });
         }
 
-        // ✅ 3. Create Meal Item
+        //  STEP 4: Create meal item
         const mealItem = await mealItemModel.create({
             mealId: meal._id,
             name,
-            photo,
-            quantity,
             calories,
             protein,
             carbs,
-            fats
+            fats,
+            quantity
         });
 
-        // ✅ 4. Update Nutrition totals
+        // STEP 5: Update nutrition totals
         await nutritionModel.updateOne(
             { _id: nutrition._id },
             {
                 $inc: {
-                    totalCalories: calories,
-                    totalProtein: protein,
-                    totalCarbs: carbs,
-                    totalFats: fats
+                    totalCalories: calories || 0,
+                    totalProtein: protein || 0,
+                    totalCarbs: carbs || 0,
+                    totalFats: fats || 0
                 }
             }
         );
 
+        // ✅RESPONSE
         return res.status(201).json({
             message: "Meal added successfully",
             data: {
@@ -81,20 +84,9 @@ export const getNutritionDetails = async (req, res) => {
         });
 
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             message: "Server Error"
         });
     }
 };
-
-export const addMeal = async (req, res) => {
-    try {
-        const id = req.id;
-        const { type } = req.body;
-
-    } catch (error) {
-        return res.status(500).json({
-            message: "Server Error",
-        })
-    }
-}
