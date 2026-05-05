@@ -68,10 +68,6 @@ const Login = ({ setIsAuth }) => {
             />
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-sm">
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                Remember me
-              </label>
 
               <span className="text-gray-500 hover:underline cursor-pointer">
                 Forgot password?

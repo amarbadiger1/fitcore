@@ -1,196 +1,249 @@
-import React, { useState } from "react";
-import { CircularProgressbarWithChildren, buildStyles } from "react-circular-progressbar";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  CircularProgressbarWithChildren,
+  buildStyles,
+} from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import API from "../services/api"
+import MacroBar from "../components/MacroBar"
+import MealItem from "../components/MealItem"
+import { toast } from "react-toastify"
 
 const Nutrition = () => {
+  const [nutrition, setNutrition] = useState(null);
+  const [meals, setMeals] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
-    const [data] = useState({
-        caloriesLeft: 1820,
-        protein: { current: 124, goal: 180 },
-        carbs: { current: 210, goal: 250 },
-        fats: { current: 42, goal: 70 },
-    });
+  const [formData, setFormData] = useState({
+    mealType: "breakfast",
+    name: "",
+    calories: "",
+    protein: "",
+    carbs: "",
+    fats: "",
+    quantity: 1,
+  });
 
-    const days = ["Mon 18", "Tue 19", "Wed 20", "Thu 21", "Fri 22"];
+  const caloriesGoal = 2500;
 
-    return (
-        <div className="w-full bg-[#f5f6f8] min-h-screen">
+  useEffect(() => { 
+    fetchData();
+  }, []);
 
-            <div className="w-10/12 mx-auto p-4 md:p-6">
 
-                {/* TOP CARD */}
-                <div className="bg-white rounded-2xl p-6 mb-6 flex flex-col md:flex-row items-center gap-6">
+  const fetchData = async () => {
+    try {
+      const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 
-                    {/* CIRCLE */}
-                    <div className="w-32 h-32">
-                        <CircularProgressbarWithChildren
-                            value={70}
-                            styles={buildStyles({
-                                pathColor: "#0f172a",
-                                trailColor: "#e5e7eb",
-                            })}
-                        >
-                            <div className="text-center">
-                                <p className="text-xl font-bold">{data.caloriesLeft}</p>
-                                <p className="text-xs text-gray-500">kcal left</p>
-                            </div>
-                        </CircularProgressbarWithChildren>
-                    </div>
+      const res = await API.get("/nutrition/mealsbydate", {
+        params: { date: today }
+      });
+      console.log(res.data.meals);
+      setMeals(res.data.meals)
+      setNutrition(res.data.nutrition)
+    } catch (error) {
+      const err = error?.response?.data?.message || "Error fetching meals";
+      toast.error(err);
+    }
+  };
 
-                    {/* MACROS */}
-                    <div className="flex-1 w-full">
+  const handleAddMeal = async () => {
+    try {
+      const today = new Date().toISOString().split("T")[0];
 
-                        {/* Protein */}
-                        <MacroBar
-                            label="Protein"
-                            value={data.protein.current}
-                            goal={data.protein.goal}
-                            color="bg-black"
-                        />
+      await API.post("/nutrition/addmeal", {
+        mealType: formData.mealType,
+        date: today,
+        name: formData.name,
+        calories: Number(formData.calories),
+        protein: Number(formData.protein),
+        carbs: Number(formData.carbs),
+        fats: Number(formData.fats),
+        quantity: Number(formData.quantity),
+      });
 
-                        {/* Carbs */}
-                        <MacroBar
-                            label="Carbs"
-                            value={data.carbs.current}
-                            goal={data.carbs.goal}
-                            color="bg-blue-400"
-                        />
+      setShowModal(false);
 
-                        {/* Fats */}
-                        <MacroBar
-                            label="Fats"
-                            value={data.fats.current}
-                            goal={data.fats.goal}
-                            color="bg-orange-400"
-                        />
+      setFormData({
+        mealType: "breakfast",
+        name: "",
+        calories: "",
+        protein: "",
+        carbs: "",
+        fats: "",
+        quantity: 1,
+      });
 
-                    </div>
+      toast.success("Item added Successfully");
 
-                    {/* QUALITY */}
-                    <div className="text-right">
-                        <p className="text-sm text-gray-500">Average Quality</p>
-                        <p className="text-3xl font-bold text-[#D4F042]">8.4</p>
-                        <p className="text-green-500 text-sm">High Fiber Day</p>
-                    </div>
+      fetchData();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-                </div>
+  const caloriesLeft = nutrition
+    ? caloriesGoal - (nutrition.totalCalories || 0)
+    : caloriesGoal;
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  return (
+    <div className="w-full bg-[#f5f6f8] min-h-screen">
+      <div className="w-10/12 mx-auto p-4 md:p-6">
 
-                    {/* LEFT SIDE */}
-                    <div className="md:col-span-2 bg-white rounded-2xl p-6">
+        {/* TOP CARD */}
+        <div className="bg-white rounded-2xl p-6 mb-6 flex flex-col md:flex-row items-center gap-6">
 
-                        {/* DAYS */}
-                        <div className="flex gap-4 mb-6">
-                            {days.map((d, i) => (
-                                <button
-                                    key={i}
-                                    className={`px-4 py-2 rounded-xl text-sm ${i === 1
-                                            ? "bg-[#0f172a] text-white"
-                                            : "text-gray-500"
-                                        }`}
-                                >
-                                    {d}
-                                </button>
-                            ))}
-                        </div>
+          <div className="w-32 h-32">
+            <CircularProgressbarWithChildren
+              value={
+                nutrition
+                  ? (nutrition.totalCalories / caloriesGoal) * 100
+                  : 0
+              }
+              styles={buildStyles({
+                pathColor: "#0f172a",
+                trailColor: "#e5e7eb",
+              })}
+            >
+              <div className="text-center">
+                <p className="text-xl font-bold">{caloriesLeft}</p>
+                <p className="text-xs text-gray-500">kcal left</p>
+              </div>
+            </CircularProgressbarWithChildren>
+          </div>
 
-                        {/* BREAKFAST */}
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="font-semibold text-lg">Breakfast</h2>
-                            <p className="text-sm text-gray-500">420 kcal • Add Item +</p>
-                        </div>
+          {/* MACROS */}
+          <div className="flex-1 w-full">
+            <MacroBar label="Protein" value={nutrition?.totalProtein || 0} goal={180} color="bg-black" />
+            <MacroBar label="Carbs" value={nutrition?.totalCarbs || 0} goal={250} color="bg-blue-400" />
+            <MacroBar label="Fats" value={nutrition?.totalFats || 0} goal={70} color="bg-orange-400" />
+          </div>
 
-                        <MealItem
-                            title="Scrambled Eggs (3)"
-                            desc="18g Protein • 15g Fat"
-                            kcal="210 kcal"
-                        />
-
-                        <MealItem
-                            title="Avocado (Half)"
-                            desc="2g Protein • 12g Fat"
-                            kcal="160 kcal"
-                        />
-
-                    </div>
-
-                    {/* RIGHT SIDE */}
-                    <div className="bg-white rounded-2xl p-6">
-
-                        <h2 className="font-semibold text-lg mb-2">
-                            Suggested Meal Plan
-                        </h2>
-
-                        <p className="text-sm text-gray-500 mb-4">
-                            Based on your muscle-gain goal and today's activity level.
-                        </p>
-
-                        {/* CARD 1 */}
-                        <div className="border-l-4 border-[#D4F042] bg-gray-50 p-4 rounded-xl mb-4">
-                            <p className="text-xs text-gray-500 mb-1">DINNER TARGET</p>
-                            <p className="font-semibold">Miso Glazed Salmon</p>
-                            <p className="text-sm text-gray-500 mb-3">
-                                High Omega-3 • 35g Protein
-                            </p>
-                            <button className="w-full py-2 rounded-full bg-[#D4F042] font-semibold">
-                                Add to Diary
-                            </button>
-                        </div>
-
-                        {/* CARD 2 */}
-                        <div className="border-l-4 border-blue-300 bg-gray-50 p-4 rounded-xl">
-                            <p className="text-xs text-gray-500 mb-1">POST-WORKOUT</p>
-                            <p className="font-semibold">Whey Isolate & Berries</p>
-                            <p className="text-sm text-gray-500">
-                                Fast Absorption • 120 kcal
-                            </p>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
+          {/* QUALITY */}
+          <div className="text-right">
+            <p className="text-sm text-gray-500">Average Quality</p>
+            <p className="text-3xl font-bold text-[#D4F042]">8.4</p>
+            <p className="text-green-500 text-sm">High Fiber Day</p>
+          </div>
         </div>
 
-    );
+        {/* HEADER + BUTTON */}
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-xl font-bold">Meals</h1>
+          <button
+            onClick={() => setShowModal(true)}
+            className="bg-black text-white px-4 py-2 rounded-lg"
+          >
+            + Add Meal
+          </button>
+        </div>
+
+        {/* MEALS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-2 bg-white rounded-2xl p-6">
+
+            {meals.length === 0 && (
+              <p className="text-gray-500">No meals added today</p>
+            )}
+
+            {meals.map((meal) => (
+              <div key={meal._id} className="mb-6">
+
+                <h2 className="font-semibold text-lg capitalize mb-4">
+                  {meal.mealType}
+                </h2>
+
+                {meal.items.length === 0 && (
+                  <p className="text-sm text-gray-400">No items</p>
+                )}
+
+                {meal.items.map((item, i) => (
+                  <MealItem
+                    key={i}
+                    title={`${item.name} (${item.quantity || 1})`}
+                    desc={`${item.protein || 0}g Protein • ${item.fats || 0}g Fat`}
+                    kcal={`${(item.calories || 0) * (item.quantity || 1)} kcal`}
+                  />
+                ))}
+
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* MODAL */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-xl w-[350px]">
+
+            <h2 className="text-lg font-semibold mb-4">Add Meal</h2>
+
+            <select
+              className="w-full border p-2 mb-3 rounded"
+              value={formData.mealType}
+              onChange={(e) =>
+                setFormData({ ...formData, mealType: e.target.value })
+              }
+            >
+              <option value="breakfast">Breakfast</option>
+              <option value="lunch">Lunch</option>
+              <option value="dinner">Dinner</option>
+              <option value="snack">Snack</option>
+            </select>
+
+            <input placeholder="Food Name" className="w-full border p-2 mb-2 rounded"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            />
+
+            <input placeholder="Calories" type="number" className="w-full border p-2 mb-2 rounded"
+              value={formData.calories}
+              onChange={(e) => setFormData({ ...formData, calories: e.target.value })}
+            />
+
+            <input placeholder="Protein" type="number" className="w-full border p-2 mb-2 rounded"
+              value={formData.protein}
+              onChange={(e) => setFormData({ ...formData, protein: e.target.value })}
+            />
+
+            <input placeholder="Carbs" type="number" className="w-full border p-2 mb-2 rounded"
+              value={formData.carbs}
+              onChange={(e) => setFormData({ ...formData, carbs: e.target.value })}
+            />
+
+            <input placeholder="Fats" type="number" className="w-full border p-2 mb-2 rounded"
+              value={formData.fats}
+              onChange={(e) => setFormData({ ...formData, fats: e.target.value })}
+            />
+
+            <input placeholder="Quantity" type="number" className="w-full border p-2 mb-2 rounded"
+              value={formData.quantity}
+              onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+            />
+
+            <div className="flex justify-between mt-4">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-300 rounded"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleAddMeal}
+                className="px-4 py-2 bg-black text-white rounded"
+              >
+                Add
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Nutrition;
-
-
-
-/* 🔥 COMPONENTS */
-
-const MacroBar = ({ label, value, goal, color }) => {
-    const percent = (value / goal) * 100;
-
-    return (
-        <div className="mb-4">
-            <div className="flex justify-between text-sm mb-1">
-                <p className="text-gray-600">{label}</p>
-                <p>
-                    {value}g / <span className="text-gray-400">{goal}g</span>
-                </p>
-            </div>
-            <div className="w-full h-2 bg-gray-200 rounded">
-                <div
-                    className={`${color} h-2 rounded`}
-                    style={{ width: `${percent}%` }}
-                ></div>
-            </div>
-        </div>
-    );
-};
-
-const MealItem = ({ title, desc, kcal }) => {
-    return (
-        <div className="bg-gray-50 p-4 rounded-xl flex justify-between items-center mb-3">
-            <div>
-                <p className="font-medium">{title}</p>
-                <p className="text-sm text-gray-500">{desc}</p>
-            </div>
-            <p className="text-gray-700">{kcal}</p>
-        </div>
-    );
-};

@@ -16,6 +16,7 @@ export const updateProfile = async (req, res) => {
     const validation = updateProfileSchema.safeParse(req.body);
 
     if (!validation.success) {
+      console.log(validation);
       return res.status(400).json({
         message: "Please enter valid inputs",
         errors: validation.error.errors
@@ -28,8 +29,8 @@ export const updateProfile = async (req, res) => {
       ...validation.data
     };
 
-    const { gender, age, weight, height, goal, activityLevel, waterIntake } = updatedData;
-
+    const { gender, age, weight, height, goal, activityLevel } = updatedData;
+ 
     let calories, protein, fats, carbs;
 
     // ✅ Only calculate if required fields exist

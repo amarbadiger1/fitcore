@@ -12,6 +12,7 @@ const Navbar = ({ isAuth, setIsAuth }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("onBoarding");
     setIsAuth(false);
     navigate("/");
   };

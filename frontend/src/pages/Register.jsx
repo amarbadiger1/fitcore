@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import API from "../services/api";
 
-const Register = () => {
+const Register = ({setIsAuth}) => {
   const navigate = useNavigate();
   const [data, setData] = useState({
     firstname: "",
@@ -24,10 +24,13 @@ const Register = () => {
         email: "",
         password: ""
       }))
-      
-      toast.success(res.data.message)
 
-      navigate("/login")
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("onBoarding",res.data.onBoarding);
+      toast.success("Please Complete the Onboaring Process");
+      setIsAuth(true);   // 🔥 THIS updates navbar instantly
+
+      navigate("/Onboarding");
     } catch (error) {
       const err = error?.response?.data?.message
       // console.log(error?.response);

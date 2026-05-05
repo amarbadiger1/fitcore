@@ -30,7 +30,7 @@ const App = () => {
           {/* Public */}
           <Route element={<PublicRoute />}>
             <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/register" element={<Register  setIsAuth={setIsAuth}  />} />
           </Route>
 
           <Route path="/" element={<Home />} />
@@ -41,13 +41,14 @@ const App = () => {
 
           {/* Protected Group */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/workout" element={<Workout />} />
             <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/nutrition" element={<Nutrition />} />
             <Route path="/progress" element={<Progress />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/workout" element={<Workout />} />
           </Route>
+          
         </Routes>
         <ToastContainer
           position="bottom-center"

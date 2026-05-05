@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import API from '../services/api'
+import { toast } from "react-toastify";
+
+
 
 const Onboarding = () => {
   const navigate = useNavigate();
@@ -8,9 +12,9 @@ const Onboarding = () => {
   const [step, setStep] = useState(1);
 
   const [formData, setFormData] = useState({
-    age: "",
-    weight: "",
-    height: "",
+    age: 0,
+    weight: 0,
+    height: 0,
     gender: "",
     activityLevel: "",
     goal: "",
@@ -23,9 +27,18 @@ const Onboarding = () => {
     setFormData({ ...formData, [key]: value });
   };
 
-  const handleSubmit = () => {
-    console.log("Final Data:", formData);
-    navigate("/dashboard");
+  const handleSubmit = async () => {
+    // console.log("Final Data:", formData);
+    // navigate("/dashboard");
+    try {
+      const onboard = await API.patch("/user/updateprofile", formData)
+      toast.success("Onboarding Completed");
+      navigate("/dashboard");
+    } catch (error) {
+      const err = error?.response?.data?.message || "Someting Went Wrong";
+      toast.error(err);
+    }
+
   };
 
   const variants = {
@@ -81,7 +94,7 @@ const Onboarding = () => {
                   type="number"
                   placeholder="Enter age"
                   value={formData.age}
-                  onChange={(e) => handleChange("age", e.target.value)}
+                  onChange={(e) => handleChange("age", Number(e.target.value))}
                   className={inputStyle}
                 />
                 <button onClick={next} className={`${btnPrimary} mt-4`}>Next</button>
@@ -96,7 +109,7 @@ const Onboarding = () => {
                   type="number"
                   placeholder="Enter weight"
                   value={formData.weight}
-                  onChange={(e) => handleChange("weight", e.target.value)}
+                  onChange={(e) => handleChange("weight", Number(e.target.value))}
                   className={inputStyle}
                 />
                 <div className="flex gap-3 mt-4">
@@ -114,7 +127,7 @@ const Onboarding = () => {
                   type="number"
                   placeholder="Enter height"
                   value={formData.height}
-                  onChange={(e) => handleChange("height", e.target.value)}
+                  onChange={(e) => handleChange("height", Number(e.target.value))}
                   className={inputStyle}
                 />
                 <div className="flex gap-3 mt-4">
@@ -155,7 +168,7 @@ const Onboarding = () => {
                 >
                   <option value="">Select activity</option>
                   <option value="low">Sedentary (little/no exercise)</option>
-                  <option value="moderate">Moderate (3-5 days/week)</option>
+                  <option value="medium">Moderate (3-5 days/week)</option>
                   <option value="high">Active (6-7 days/week)</option>
                 </select>
                 <div className="flex gap-3 mt-4">
@@ -175,8 +188,8 @@ const Onboarding = () => {
                   className={inputStyle}
                 >
                   <option value="">Select goal</option>
-                  <option value="lose">Lose Weight</option>
-                  <option value="gain">Gain Muscle</option>
+                  <option value="weight_loss">Lose Weight</option>
+                  <option value="muscle_gain">Gain Muscle</option>
                   <option value="maintain">Maintain</option>
                 </select>
                 <div className="flex gap-3 mt-4">

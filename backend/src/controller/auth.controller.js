@@ -28,15 +28,34 @@ export const register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        await userModel.create({
+        const user = await userModel.create({
             firstname,
             lastname,
             email,
             password: hashedPassword,
         })
 
+        const token = jwt.sign({ id: user._id }, config.JWT_SECRET, { expiresIn: "3d" })
+
+        res.cookie("token", token, {
+            httpOnly: true,      // 🔐 prevents JS access (XSS safe)
+            secure: false,       // true in production (HTTPS)
+            sameSite: "strict",  // CSRF protection
+            maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
+        });
+
+        const data = {
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+        }
+
+
         return res.status(201).json({
             message: "User created successfully",
+            data,
+            onBoarding:"true",
+            token
         });
 
     } catch (error) {
