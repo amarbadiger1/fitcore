@@ -17,8 +17,28 @@ import Progress from "./pages/Progress";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import { useSetRecoilState } from "recoil";
+import { userAtom } from "./store/userAtom";
 const App = () => {
   const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
+
+  const setUser = useSetRecoilState(userAtom);
+  const [loading, setLoding] = useState(true);
+
+  const getMe = () => {
+    try {
+      const res = API.get("/user/getMe");
+      setUser(res.data.user)
+    } catch (error) {
+      setUser(null);
+    } finally {
+      setLoding(false);
+    }
+  }
+  useEffect(() => {
+    getMe();
+  }, [])
+
 
   return (
     <BrowserRouter>
@@ -30,7 +50,7 @@ const App = () => {
           {/* Public */}
           <Route element={<PublicRoute />}>
             <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
-            <Route path="/register" element={<Register  setIsAuth={setIsAuth}  />} />
+            <Route path="/register" element={<Register setIsAuth={setIsAuth} />} />
           </Route>
 
           <Route path="/" element={<Home />} />
@@ -48,7 +68,7 @@ const App = () => {
             <Route path="/progress" element={<Progress />} />
             <Route path="/workout" element={<Workout />} />
           </Route>
-          
+
         </Routes>
         <ToastContainer
           position="bottom-center"

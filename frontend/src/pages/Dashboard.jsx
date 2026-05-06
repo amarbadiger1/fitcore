@@ -1,12 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CircularProgressbar,
   buildStyles,
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { useRecoilValue } from "recoil";
+import { userAtom } from "../store/userAtom";
+import { toast } from "react-toastify"
+import API from "../services/api";
+
 
 const Dashboard = () => {
+  const [userdata, setUserdata] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    age: "",
+    height: "",
+    weight: "",
+    goal: "",
+  });
 
+  const fetchUser = async () => {
+    try {
+      const res = await API.get("/user/getme");
+      console.log(res.data.user, "hello");
+      setUserdata(res.data.user)
+    } catch (error) {
+      const err = error?.response?.data?.message;
+      console.log(error);
+
+      toast.error(err);
+    }
+  }
+
+  useEffect(() => {
+    fetchUser();
+  },[])
 
   // 🔥 Dummy Data
   const [data, setData] = useState({
@@ -68,21 +98,21 @@ const Dashboard = () => {
               </h1>
 
               <p className="text-gray-500 mt-1">
-                out of {goal.toLocaleString()} kcal goal
+                out of { userdata.dailyCalorieTarget} kcal goal
               </p>
 
               <div className="flex gap-6 mt-6 text-sm">
                 <div>
                   <p className="text-gray-500">● Protein</p>
-                  <p className="font-semibold">{protein}g</p>
+                  <p className="font-semibold">{userdata.protein}g</p>
                 </div>
                 <div>
                   <p className="text-gray-500">● Carbs</p>
-                  <p className="font-semibold">{carbs}g</p>
+                  <p className="font-semibold">{userdata.carbs}g</p>
                 </div>
                 <div>
                   <p className="text-gray-500">● Fats</p>
-                  <p className="font-semibold">{fats}g</p>
+                  <p className="font-semibold">{userdata.fats}g</p>
                 </div>
               </div>
             </div>

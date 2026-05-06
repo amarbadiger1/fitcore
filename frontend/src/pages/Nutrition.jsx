@@ -15,6 +15,28 @@ const Nutrition = () => {
   const [meals, setMeals] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
+  const [userdata, setUserdata] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    age: "",
+    height: "",
+    weight: "",
+    goal: "",
+  });
+
+
+  const fetchUser = async () => {
+    try {
+      const res = await API.get("/user/getme");
+      console.log(res.data.user, "hello");
+      setUserdata(res.data.user)
+    } catch (error) {
+      const err = error?.response?.data?.message || "Someting Went Wrong";
+      toast.error(err);
+    }
+  }
+
   const [formData, setFormData] = useState({
     mealType: "breakfast",
     name: "",
@@ -27,8 +49,9 @@ const Nutrition = () => {
 
   const caloriesGoal = 2500;
 
-  useEffect(() => { 
+  useEffect(() => {
     fetchData();
+    fetchUser();
   }, []);
 
 
@@ -115,12 +138,12 @@ const Nutrition = () => {
 
           {/* MACROS */}
           <div className="flex-1 w-full">
-            <MacroBar label="Protein" value={nutrition?.totalProtein || 0} goal={180} color="bg-black" />
-            <MacroBar label="Carbs" value={nutrition?.totalCarbs || 0} goal={800} color="bg-blue-400" />
-            <MacroBar label="Fats" value={nutrition?.totalFats || 0} goal={70} color="bg-orange-400" />
+            <MacroBar label="Protein" value={nutrition?.totalProtein || 0} goal={userdata.protein} color="bg-black" />
+            <MacroBar label="Carbs" value={nutrition?.totalCarbs || 0} goal={userdata.carbs} color="bg-blue-400" />
+            <MacroBar label="Fats" value={nutrition?.totalFats || 0} goal={userdata.fats} color="bg-orange-400" />
           </div>
 
-        
+
         </div>
 
         {/* HEADER + BUTTON */}
