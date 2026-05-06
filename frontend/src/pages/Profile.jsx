@@ -1,18 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import API from "../services/api"
 
 const Profile = () => {
-  const user = {
-    name: "Amar Badiger",
-    email: "amar@example.com",
-    age: 23,
-    height: 175,
-    weight: 70,
-    goal: "Lose Fat",
-  };
+  const [userdata, setUserdata] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    age: "",
+    height: "",
+    weight: "",
+    goal: "",
+  });
+
+
+  const fetchUser = async () => {
+    try {
+      const res = await API.get("user/getme");
+      console.log(res.data.user, "hello");
+      setUserdata(res.data.user)
+    } catch (error) {
+      const err = error?.response?.data?.message || "Someting Went Wrong";
+      toast.error(err);
+    }
+  }
+  const handleChange = async () => {
+    try {
+      const onboard = await API.patch("/user/updateprofile", userdata)
+      toast.success("updated Completed");
+    } catch (error) {
+      const err = error?.response?.data?.message || "Someting Went Wrong";
+      toast.error(err);
+    }
+  }
+
+  useEffect(() => {
+    fetchUser();
+  }, [])
+
+
+
 
   return (
     <div className="w-full lg:w-10/12 mx-auto bg-gray-50 min-h-screen p-4 sm:p-6 lg:p-8">
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* LEFT: Profile Card */}
@@ -24,9 +54,9 @@ const Profile = () => {
           />
 
           <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
-            {user.name}
+            {userdata?.firstname} {userdata?.lastname}
           </h2>
-          <p className="text-gray-500 text-sm">{user.email}</p>
+          <p className="text-gray-500 text-sm">{userdata.email}</p>
 
           <button className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-full text-sm hover:bg-gray-700 transition w-full sm:w-auto">
             Edit Profile
@@ -45,7 +75,10 @@ const Profile = () => {
               <label className="text-sm text-gray-500">Age</label>
               <input
                 type="number"
-                value={user.age}
+                value={userdata.age}
+                onChange={(e) =>
+                  setUserdata({ ...userdata, age: Number(e.target.value)})
+                }
                 className="w-full mt-1 p-2 text-sm sm:text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200"
               />
             </div>
@@ -54,7 +87,10 @@ const Profile = () => {
               <label className="text-sm text-gray-500">Height (cm)</label>
               <input
                 type="number"
-                value={user.height}
+                value={userdata.height}
+                onChange={(e) =>
+                  setUserdata({ ...userdata, height: Number(e.target.value )})
+                }
                 className="w-full mt-1 p-2 text-sm sm:text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200"
               />
             </div>
@@ -63,7 +99,10 @@ const Profile = () => {
               <label className="text-sm text-gray-500">Weight (kg)</label>
               <input
                 type="number"
-                value={user.weight}
+                value={userdata.weight}
+                onChange={(e) =>
+                  setUserdata({ ...userdata, weight:Number(e.target.value)})
+                }
                 className="w-full mt-1 p-2 text-sm sm:text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200"
               />
             </div>
@@ -71,18 +110,23 @@ const Profile = () => {
             <div>
               <label className="text-sm text-gray-500">Goal</label>
               <select
-                value={user.goal}
+                value={userdata.goal}
+                onChange={(e) =>
+                  setUserdata({ ...userdata, goal: e.target.value })
+                }
                 className="w-full mt-1 p-2 text-sm sm:text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200"
               >
-                <option>Lose Fat</option>
-                <option>Gain Muscle</option>
-                <option>Maintain</option>
+                <option value={"weight_loss"}>weight_loss</option>
+                <option value={"muscle_gain"}>muscle_gain</option>
+                <option value={"maintain"}>maintain</option>
               </select>
             </div>
 
           </div>
 
-          <button className="mt-6 w-full sm:w-auto px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition">
+          <button className="mt-6 w-full sm:w-auto px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition"
+            onClick={handleChange}
+          >
             Save Changes
           </button>
         </div>
@@ -93,21 +137,21 @@ const Profile = () => {
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
             <p className="text-sm text-gray-500">Current Weight</p>
             <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mt-2">
-              {user.weight} kg
+              {userdata.weight} kg
             </h3>
           </div>
 
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
             <p className="text-sm text-gray-500">Height</p>
             <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mt-2">
-              {user.height} cm
+              {userdata.height} cm
             </h3>
           </div>
 
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
             <p className="text-sm text-gray-500">Goal</p>
             <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mt-2">
-              {user.goal}
+              {userdata.goal}
             </h3>
           </div>
 

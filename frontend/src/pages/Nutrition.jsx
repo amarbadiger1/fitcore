@@ -116,16 +116,11 @@ const Nutrition = () => {
           {/* MACROS */}
           <div className="flex-1 w-full">
             <MacroBar label="Protein" value={nutrition?.totalProtein || 0} goal={180} color="bg-black" />
-            <MacroBar label="Carbs" value={nutrition?.totalCarbs || 0} goal={250} color="bg-blue-400" />
+            <MacroBar label="Carbs" value={nutrition?.totalCarbs || 0} goal={800} color="bg-blue-400" />
             <MacroBar label="Fats" value={nutrition?.totalFats || 0} goal={70} color="bg-orange-400" />
           </div>
 
-          {/* QUALITY */}
-          <div className="text-right">
-            <p className="text-sm text-gray-500">Average Quality</p>
-            <p className="text-3xl font-bold text-[#D4F042]">8.4</p>
-            <p className="text-green-500 text-sm">High Fiber Day</p>
-          </div>
+        
         </div>
 
         {/* HEADER + BUTTON */}
@@ -140,7 +135,7 @@ const Nutrition = () => {
         </div>
 
         {/* MEALS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="md:col-span-2 bg-white rounded-2xl p-6">
 
             {meals.length === 0 && (
