@@ -62,9 +62,6 @@ const Navbar = ({ isAuth, setIsAuth }) => {
               <NavLink to="/workout" className={navLinkClass}>
                 Workout
               </NavLink>
-              <NavLink to="/progress" className={navLinkClass}>
-                Progress
-              </NavLink>
               <NavLink to="/profile" className={navLinkClass}>
                 Profile
               </NavLink>
@@ -130,7 +127,6 @@ const Navbar = ({ isAuth, setIsAuth }) => {
               <NavLink to="/dashboard">Dashboard</NavLink>
               <NavLink to="/nutrition">Nutrition</NavLink>
               <NavLink to="/workout">Workout</NavLink>
-              <NavLink to="/progress">Progress</NavLink>
               <NavLink to="/profile">Profile</NavLink>
 
               <button onClick={handleLogout} className="text-red-500 text-left">

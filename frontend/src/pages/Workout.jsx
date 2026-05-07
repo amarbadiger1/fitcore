@@ -49,7 +49,7 @@ const Workout = () => {
         {/* GRID */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-          {/* EXERCISES */}
+          {/* EXERCISES
           {exercises.map((ex, i) => (
             <div key={i} className="bg-white rounded-2xl p-6 flex items-center gap-4 shadow-sm">
               <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center">
@@ -61,35 +61,11 @@ const Workout = () => {
                 <p className="text-sm text-gray-500">{ex.level}</p>
               </div>
             </div>
-          ))}
+          ))} */}
 
-          {/* TIMER */}
-          <div className="bg-gradient-to-br from-[#0f172a] to-[#020617] text-white rounded-2xl p-6 flex flex-col items-center justify-center">
-            <p className="text-sm text-gray-400 mb-2">Active Timer</p>
-
-            <h1 className="text-5xl font-bold text-[#D4F042] mb-4">
-              {formatTime(seconds)}
-            </h1>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => setRunning(!running)}
-                className="px-4 py-2 rounded-full bg-[#D4F042] text-black font-semibold"
-              >
-                {running ? "Pause" : "Start"}
-              </button>
-
-              <button
-                onClick={() => setSeconds(0)}
-                className="px-4 py-2 rounded-full border border-gray-500"
-              >
-                Reset
-              </button>
-            </div>
-          </div>
 
           {/* CURRENT LOG */}
-          <div className="bg-white rounded-2xl p-6 md:col-span-2 shadow-sm">
+          <div className="bg-white rounded-2xl p-6 md:col-span-1 shadow-sm">
 
             <h2 className="font-semibold text-lg mb-2">Current Log</h2>
 
@@ -129,28 +105,6 @@ const Workout = () => {
 
           </div>
 
-          {/* RECOMMENDED */}
-          <div className="md:col-span-2">
-            <h2 className="font-semibold text-lg mb-4">Recommended Plans</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-              <div className="bg-white p-5 rounded-2xl shadow-sm">
-                <p className="font-medium">PPL: Push Day</p>
-                <p className="text-sm text-gray-500">
-                  6 Exercises • 55 mins
-                </p>
-              </div>
-
-              <div className="bg-white p-5 rounded-2xl shadow-sm">
-                <p className="font-medium">Full Body Blast</p>
-                <p className="text-sm text-gray-500">
-                  8 Exercises • 45 mins
-                </p>
-              </div>
-
-            </div>
-          </div>
 
           {/* HISTORY */}
           <div className="bg-white rounded-2xl p-6 shadow-sm">

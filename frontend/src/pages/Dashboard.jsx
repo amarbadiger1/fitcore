@@ -36,7 +36,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchUser();
-  },[])
+  }, [])
 
   // 🔥 Dummy Data
   const [data, setData] = useState({
@@ -98,7 +98,7 @@ const Dashboard = () => {
               </h1>
 
               <p className="text-gray-500 mt-1">
-                out of { userdata.dailyCalorieTarget} kcal goal
+                out of {userdata.dailyCalorieTarget} kcal goal
               </p>
 
               <div className="flex gap-6 mt-6 text-sm">
@@ -174,51 +174,6 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
-
-          {/* AI CARD */}
-          <div className="bg-gradient-to-br from-[#1f2a3a] to-[#2c3e50] text-white rounded-2xl p-6 flex flex-col justify-between">
-            <div>
-              <h2 className="text-lg font-semibold">
-                AI Food Scanner
-              </h2>
-              <p className="text-sm text-gray-300">
-                Snap a meal to track calories
-              </p>
-            </div>
-
-            <button className="mt-10 bg-white/20 border border-white/30 rounded-full py-3">
-              Tap to analyze photo
-            </button>
-          </div>
-
-          {/* WORKOUT CARD */}
-          <div className="md:col-span-2 bg-white rounded-2xl p-6 shadow-sm">
-
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="font-semibold text-gray-800">
-                Today's Plan
-              </h2>
-              <button className="bg-[#D4F042] px-4 py-2 rounded-full font-semibold">
-                Start Workout
-              </button>
-            </div>
-
-            {data.workouts.map((workout) => (
-              <div
-                key={workout.id}
-                className="bg-gray-50 p-4 rounded-xl flex justify-between items-center mb-3"
-              >
-                <div>
-                  <p className="font-medium">{workout.title}</p>
-                  <p className="text-sm text-gray-500">
-                    {workout.duration} • {workout.exercises}
-                  </p>
-                </div>
-                <p className="text-gray-400">{workout.status}</p>
-              </div>
-            ))}
-          </div>
-
         </div>
       </div>
     </div>

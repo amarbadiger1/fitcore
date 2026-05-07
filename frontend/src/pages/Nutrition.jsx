@@ -23,6 +23,7 @@ const Nutrition = () => {
     height: "",
     weight: "",
     goal: "",
+    dailyCalorieTarget: "",
   });
 
 
@@ -47,7 +48,7 @@ const Nutrition = () => {
     quantity: 1,
   });
 
-  const caloriesGoal = 2500;
+  const caloriesGoal = userdata.dailyCalorieTarget;
 
   useEffect(() => {
     fetchData();

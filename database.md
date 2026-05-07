@@ -187,36 +187,12 @@ Tracks body metrics over time.
 
 ---
 
-# 🏆 8. Achievements Collection
-
-Stores user achievements and badges.
-
-### Fields:
-
-```json
-{
-  "_id": "ObjectId",
-  "userId": "ObjectId",
-
-  "badges": [
-    {
-      "name": "string",
-      "icon": "string",
-      "earnedAt": "date"
-    }
-  ]
-}
-```
-
----
-
 # 🔗 Relationships (Important)
 
 ```text
 User → NutritionLogs → Meals → MealItems
 User → WorkoutLogs → Exercises
 User → Progress
-User → Achievements
 ```
 
 ---
