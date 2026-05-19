@@ -9,34 +9,16 @@ import API from "../services/api"
 import MacroBar from "../components/MacroBar"
 import MealItem from "../components/MealItem"
 import { toast } from "react-toastify"
+import { useSelector } from "react-redux";
+
+
 
 const Nutrition = () => {
+  const user = useSelector((state) => state.user.data)
+
   const [nutrition, setNutrition] = useState(null);
   const [meals, setMeals] = useState([]);
   const [showModal, setShowModal] = useState(false);
-
-  const [userdata, setUserdata] = useState({
-    firstname: "",
-    lastname: "",
-    email: "",
-    age: "",
-    height: "",
-    weight: "",
-    goal: "",
-    dailyCalorieTarget: "",
-  });
-
-
-  const fetchUser = async () => {
-    try {
-      const res = await API.get("/user/getme");
-      console.log(res.data.user, "hello");
-      setUserdata(res.data.user)
-    } catch (error) {
-      const err = error?.response?.data?.message || "Someting Went Wrong";
-      toast.error(err);
-    }
-  }
 
   const [formData, setFormData] = useState({
     mealType: "breakfast",
@@ -48,13 +30,7 @@ const Nutrition = () => {
     quantity: 1,
   });
 
-  const caloriesGoal = userdata.dailyCalorieTarget;
-
-  useEffect(() => {
-    fetchData();
-    fetchUser();
-  }, []);
-
+  const caloriesGoal = user.dailyCalorieTarget;
 
   const fetchData = async () => {
     try {
@@ -71,6 +47,10 @@ const Nutrition = () => {
       toast.error(err);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleAddMeal = async () => {
     try {
@@ -139,9 +119,9 @@ const Nutrition = () => {
 
           {/* MACROS */}
           <div className="flex-1 w-full">
-            <MacroBar label="Protein" value={nutrition?.totalProtein || 0} goal={userdata.protein} color="bg-black" />
-            <MacroBar label="Carbs" value={nutrition?.totalCarbs || 0} goal={userdata.carbs} color="bg-blue-400" />
-            <MacroBar label="Fats" value={nutrition?.totalFats || 0} goal={userdata.fats} color="bg-orange-400" />
+            <MacroBar label="Protein" value={nutrition?.totalProtein || 0} goal={user.protein} color="bg-black" />
+            <MacroBar label="Carbs" value={nutrition?.totalCarbs || 0} goal={user.carbs} color="bg-blue-400" />
+            <MacroBar label="Fats" value={nutrition?.totalFats || 0} goal={user.fats} color="bg-orange-400" />
           </div>
 
 

@@ -17,27 +17,29 @@ import Progress from "./pages/Progress";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
-import { useSetRecoilState } from "recoil";
-import { userAtom } from "./store/userAtom";
+import API from "./services/api";
+import { useDispatch } from "react-redux";
+import { setUser } from "./store/features/userSlice"
+import EditProfile from "./pages/EditProfile";
+
 const App = () => {
   const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
+  const dispatch = useDispatch()
 
-  const setUser = useSetRecoilState(userAtom);
-  const [loading, setLoding] = useState(true);
-
-  const getMe = () => {
+  const getUser = async () => {
     try {
-      const res = API.get("/user/getMe");
-      setUser(res.data.user)
+      const res = await API.get("/user/getme");
+      dispatch(setUser(res.data.user));
     } catch (error) {
-      setUser(null);
-    } finally {
-      setLoding(false);
+      const err = error?.response?.data?.message;
+      console.log(error);
     }
   }
+
   useEffect(() => {
-    getMe();
+    getUser()
   }, [])
+
 
 
   return (
@@ -65,7 +67,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/nutrition" element={<Nutrition />} />
-            {/* <Route path="/progress" element={<Progress />} /> */}
+            <Route path="/edit-profile" element={<EditProfile />} />
             <Route path="/workout" element={<Workout />} />
           </Route>
 

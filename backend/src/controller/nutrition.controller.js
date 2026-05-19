@@ -169,7 +169,7 @@ export const getMealsByDate = async (req, res) => {
 
         if (!nutrition) {
             return res.status(404).json({
-                message: "No data for this date"
+                message: "Todays Nutrition is not added"
             });
         }
 

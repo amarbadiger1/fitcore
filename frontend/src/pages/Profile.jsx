@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/api"
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Profile = () => {
+  const user = useSelector((state) => state.user.data)
+
+  const navigate = useNavigate()
+
+
   const [userdata, setUserdata] = useState({
     firstname: "",
     lastname: "",
@@ -13,17 +21,11 @@ const Profile = () => {
     profilePic: ""
   });
 
+  useEffect(() => {
+    
+  })
 
-  const fetchUser = async () => {
-    try {
-      const res = await API.get("/user/getme");
-      console.log(res.data.user, "hello");
-      setUserdata(res.data.user)
-    } catch (error) {
-      const err = error?.response?.data?.message || "Someting Went Wrong";
-      toast.error(err);
-    }
-  }
+
   const handleChange = async () => {
     try {
       const onboard = await API.patch("/user/updateprofile", userdata)
@@ -34,32 +36,28 @@ const Profile = () => {
     }
   }
 
-  useEffect(() => {
-    fetchUser();
-  }, [])
-
-
   return (
     <div className="w-full bg-[#f5f6f8] min-h-screen">
       <div className="w-10/12 mx-auto p-4 md:p-6">
-
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* LEFT: Profile Card */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
             <img
-              src={userdata.profilePic == "" ? "https://cutiedp.com/wp-content/uploads/2025/08/no-dp-image-1.webp" : userdata.profilePic}
+              src={user.profilePic == "" ? "https://cutiedp.com/wp-content/uploads/2025/08/no-dp-image-1.webp" : user.profilePic}
               alt="profile"
               className="w-20 h-20 sm:w-24 sm:h-24 rounded-full mb-4"
             />
 
             <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
-              {userdata?.firstname} {userdata?.lastname}
+              {user?.firstname} {user?.lastname}
             </h2>
-            <p className="text-gray-500 text-sm">{userdata.email}</p>
+            <p className="text-gray-500 text-sm">{user.email}</p>
 
-            <button className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-full text-sm hover:bg-gray-700 transition w-full sm:w-auto">
+            <button onClick={() => {
+              navigate("/edit-profile")
+            }} className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-full text-sm hover:bg-gray-700 transition w-full sm:w-auto">
               Edit Profile
             </button>
           </div>
@@ -138,21 +136,21 @@ const Profile = () => {
             <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
               <p className="text-sm text-gray-500">Current Weight</p>
               <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mt-2">
-                {userdata.weight} kg
+                {user.weight} kg
               </h3>
             </div>
 
             <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
               <p className="text-sm text-gray-500">Height</p>
               <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mt-2">
-                {userdata.height} cm
+                {user.height} cm
               </h3>
             </div>
 
             <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
               <p className="text-sm text-gray-500">Goal</p>
               <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mt-2">
-                {userdata.goal}
+                {user.goal}
               </h3>
             </div>
 

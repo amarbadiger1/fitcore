@@ -4,41 +4,16 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { useRecoilValue } from "recoil";
-import { userAtom } from "../store/userAtom";
 import { toast } from "react-toastify"
 import API from "../services/api";
-
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
-  const [userdata, setUserdata] = useState({
-    firstname: "",
-    lastname: "",
-    email: "",
-    age: "",
-    height: "",
-    weight: "",
-    goal: "",
-  });
 
-  const fetchUser = async () => {
-    try {
-      const res = await API.get("/user/getme");
-      console.log(res.data.user, "hello");
-      setUserdata(res.data.user)
-    } catch (error) {
-      const err = error?.response?.data?.message;
-      console.log(error);
+  const user = useSelector((state) => state.user.data);
 
-      toast.error(err);
-    }
-  }
 
-  useEffect(() => {
-    fetchUser();
-  }, [])
 
-  // 🔥 Dummy Data
   const [data, setData] = useState({
     calories: {
       burned: 2450,
@@ -83,6 +58,7 @@ const Dashboard = () => {
     <div className="w-full bg-[#f5f6f8]">
 
       <div className="min-h-screen w-10/12 mx-auto p-4 md:p-6">
+        <h3 className="pb-3 px-2 ">Hey {user.firstname} How are you Doing Today</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
           {/* CALORIES CARD */}
@@ -98,21 +74,21 @@ const Dashboard = () => {
               </h1>
 
               <p className="text-gray-500 mt-1">
-                out of {userdata.dailyCalorieTarget} kcal goal
+                out of {user.dailyCalorieTarget} kcal goal
               </p>
 
               <div className="flex gap-6 mt-6 text-sm">
                 <div>
                   <p className="text-gray-500">● Protein</p>
-                  <p className="font-semibold">{userdata.protein}g</p>
+                  <p className="font-semibold">{user.protein}g</p>
                 </div>
                 <div>
                   <p className="text-gray-500">● Carbs</p>
-                  <p className="font-semibold">{userdata.carbs}g</p>
+                  <p className="font-semibold">{user.carbs}g</p>
                 </div>
                 <div>
                   <p className="text-gray-500">● Fats</p>
-                  <p className="font-semibold">{userdata.fats}g</p>
+                  <p className="font-semibold">{user.fats}g</p>
                 </div>
               </div>
             </div>

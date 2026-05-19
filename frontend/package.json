@@ -10,16 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.12.0",
     "axios": "^1.15.0",
     "framer-motion": "^12.38.0",
     "react": "^18.3.1",
     "react-circular-progressbar": "^2.2.0",
     "react-dom": "^18.3.1",
+    "react-redux": "^9.3.0",
     "react-router-dom": "^7.14.0",
     "react-toastify": "^11.0.5",
     "rechart": "^0.0.1",
-    "recharts": "^3.8.1",
-    "recoil": "^0.7.7"
+    "recharts": "^3.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
