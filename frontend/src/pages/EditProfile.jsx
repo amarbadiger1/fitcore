@@ -29,7 +29,6 @@ const EditProfile = () => {
               />
             </div>
 
-
             <div>
               <label className="text-sm text-gray-500">Firstname</label>
               <input
@@ -47,13 +46,6 @@ const EditProfile = () => {
                 className="w-full mt-1 p-2 text-sm sm:text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200"
               />
             </div>
-
-
-
-
-
-
-
 
           </div>
 

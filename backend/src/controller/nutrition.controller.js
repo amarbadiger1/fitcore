@@ -1,11 +1,13 @@
 import nutritionModel from "../models/nutrition.model.js"
 import mealsModel from "../models/meals.model.js"
 import mealItemModel from "../models/mealsItem.model.js"
+import { generativeModel } from "../utils/geminiModel.js";
 
 export const addMeal = async (req, res) => {
     try {
         const userId = req.id;
         const { mealType, name, calories, protein, carbs, fats, quantity } = req.body;
+
 
         //  STEP 1: Get today's range
         const start = new Date();
@@ -205,3 +207,45 @@ export const getMealsByDate = async (req, res) => {
         });
     }
 };
+
+
+export const analysMeals = async (req, res) => {
+    try {
+        const userId = req.id;
+        const { meal } = req.body;
+
+        const prompt = `
+      You are a nutrition expert.
+
+      Analyze this meal:
+
+      "${meal}"
+
+      Return ONLY valid JSON.
+
+      Format:
+      {
+        "calories": number,
+        "protein": number,
+        "carbs": number,
+        "fats": number
+      }
+    `;
+
+        const result = await generativeModel(prompt);
+
+        res.status(200).json({
+            success: true,
+            data: result
+        });
+
+    } catch (error) {
+        console.log(error);
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+}
+

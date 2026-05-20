@@ -22,8 +22,19 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    
-  })
+    if (user) {
+      setUserdata({
+        firstname: user.firstname || "",
+        lastname: user.lastname || "",
+        email: user.email || "",
+        age: user.age || "",
+        height: user.height || "",
+        weight: user.weight || "",
+        goal: user.goal || "",
+        profilePic: user.profilePic || ""
+      });
+    }
+  }, [user]);
 
 
   const handleChange = async () => {

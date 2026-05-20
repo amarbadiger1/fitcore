@@ -19,7 +19,7 @@ export const updateProfileSchema = z.object({
 
     goal: z.enum(["weight_loss", "muscle_gain", "maintain"]),
     activityLevel: z.enum(["low", "medium", "high"])
-});
+}).partial();
 
 // ✅ Login schema
 export const loginSchema = z.object({
