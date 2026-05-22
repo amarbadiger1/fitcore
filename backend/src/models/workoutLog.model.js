@@ -1,23 +1,37 @@
 import mongoose from "mongoose";
 
-const workoutLogs = new mongoose.Schema({
+const workoutLogsSchema = new mongoose.Schema(
+  {
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    date: {
-        type: Date,
-        default: Date.now,
-        required: true
-    },
-    totalDuration: {
-        type: Number,
-        default: 0
-    },
-    caloriesBurned: {
-        type: Number,
-        default: 0
-    }
-}, { timestamps: true })
 
-const workoutLogs = mongoose.model("workoutlogs", workoutLogs)
+    workoutDay: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    date: {
+      type: Date,
+      default: Date.now,
+    },
+
+    totalDuration: {
+      type: Number,
+      default: 0,
+    },
+
+    caloriesBurned: {
+      type: Number,
+      default: 0,
+    },
+  },
+  { timestamps: true }
+);
+
+const WorkoutLog = mongoose.model("WorkoutLog", workoutLogsSchema);
+
+export default WorkoutLog;

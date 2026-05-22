@@ -6,14 +6,14 @@ This project uses **MongoDB with Mongoose** and follows a scalable, modular sche
 
 # 📦 Collections Overview
 
-* Users
-* NutritionLogs
-* Meals
-* MealItems
-* WorkoutLogs
-* Exercises
-* Progress
-* Achievements
+- Users
+- NutritionLogs
+- Meals
+- MealItems
+- WorkoutLogs
+- Exercises
+- Progress
+- Achievements
 
 ---
 
@@ -127,7 +127,7 @@ Stores workout sessions.
   "_id": "ObjectId",
   "userId": "ObjectId",
   "date": "YYYY-MM-DD",
-
+  "workoutName": "String",
   "totalDuration": "number",
   "caloriesBurned": "number",
 
@@ -201,36 +201,35 @@ User → Progress
 
 ### 1. Normalized Structure
 
-* Meals and MealItems are separated for scalability
+- Meals and MealItems are separated for scalability
 
 ### 2. Avoid Large Documents
 
-* Prevents performance issues in MongoDB
+- Prevents performance issues in MongoDB
 
 ### 3. Indexed Queries (Later)
 
-* userId + date will be indexed for fast lookup
+- userId + date will be indexed for fast lookup
 
 ---
 
 # ⚡ Future Improvements
 
-* Add indexing for performance
-* Add soft deletes
-* Add versioning for logs
-* Add AI-generated fields
+- Add indexing for performance
+- Add soft deletes
+- Add versioning for logs
+- Add AI-generated fields
 
 ---
 
 # 🚀 Next Step
 
-* Create Mongoose models for:
+- Create Mongoose models for:
+  - User
+  - NutritionLog
 
-  * User
-  * NutritionLog
+- Connect MongoDB
 
-* Connect MongoDB
-
-* Start first API
+- Start first API
 
 ---

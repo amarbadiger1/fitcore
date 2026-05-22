@@ -4,7 +4,7 @@ const workoutSchema = new mongoose.Schema(
   {
     workoutLogId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "workoutLogs", 
+      ref: "WorkoutLog",
       required: true,
     },
 
@@ -20,6 +20,7 @@ const workoutSchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
+
         weight: {
           type: Number,
           required: true,
@@ -28,12 +29,15 @@ const workoutSchema = new mongoose.Schema(
     ],
 
     duration: {
-      type: Number, 
+      type: Number,
+      default: 0,
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 
-export const Workout = mongoose.model("Workout", workoutSchema);
+const Workout = mongoose.model("Workout", workoutSchema);
+
+export default Workout;

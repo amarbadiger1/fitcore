@@ -8,6 +8,7 @@ import dns from "dns"
 import authRoutes from './routes/auth.routes.js'
 import userRoutes from "./routes/user.routes.js"
 import nutritionRoutes from "./routes/nutrition.routes.js"
+import workoutRoutes from "./routes/workout.routes.js"
 import jwtVerification from "./middleware/jwtVerification.js"
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
@@ -19,8 +20,8 @@ connectDB();
 //     credentials: true
 // }));
 app.use(cors({
-  origin: "http://localhost:5173",  // your frontend URL
-  credentials: true
+    origin: "http://localhost:5173",  // your frontend URL
+    credentials: true
 }));
 
 app.use(helmet());
@@ -33,13 +34,8 @@ app.use(cookieParser())
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/nutrition", nutritionRoutes)
+app.use("/api/workout", workoutRoutes)
 
-
-// app.get("/", jwtVerification, (req, res) => {
-//     return res.status(200).json({
-//         message: "Hello world",
-//     })
-// })
 
 
 app.use((err, req, res, next) => {
