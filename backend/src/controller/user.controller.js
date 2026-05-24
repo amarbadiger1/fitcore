@@ -1,6 +1,10 @@
 import nutritionModel from "../models/nutrition.model.js";
 import userModel from "../models/user.model.js";
 import { updateProfileSchema } from "../validations/user.validation.js";
+import cloudinary from "../config/cloudinary.js";
+import { resolve } from "dns";
+import { rejects } from "assert";
+import streamifier from "streamifier"
 
 export const updateProfile = async (req, res) => {
   try {
@@ -13,7 +17,37 @@ export const updateProfile = async (req, res) => {
       });
     }
 
-    const validation = updateProfileSchema.safeParse(req.body);
+    let profilePic = user.profilePic;
+
+
+    if (req.file) {
+      const cloudinaryResponse = await new Promise(
+        (resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream({
+            folder: "fitcore_profiles"
+          },
+            (error, result) => {
+              if (error) {
+                reject(error);
+                console.log(error);
+
+              } else {
+                resolve(result);
+              }
+            }
+          );
+
+          streamifier.createReadStream(req.file.buffer).pipe(stream);
+        })
+      profilePic = cloudinaryResponse.secure_url;
+    }
+
+    const bodyData = {
+      ...req.body,
+      profilePic,
+    };
+
+    const validation = updateProfileSchema.safeParse(bodyData);
 
     if (!validation.success) {
       console.log(validation);
@@ -30,7 +64,7 @@ export const updateProfile = async (req, res) => {
     };
 
     const { gender, age, weight, height, goal, activityLevel } = updatedData;
- 
+
     let calories, protein, fats, carbs;
 
     // ✅ Only calculate if required fields exist
@@ -89,6 +123,8 @@ export const updateProfile = async (req, res) => {
     });
 
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       message: "Internal Server Error"
     });
