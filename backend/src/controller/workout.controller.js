@@ -1,5 +1,6 @@
 import Workout from "../models/workout.model.js";
 import WorkoutLog from "../models/workoutLog.model.js";
+import { generativeModel } from "../utils/geminiModel.js";
 
 export const addWorkout = async (req, res) => {
 
@@ -64,6 +65,28 @@ export const addWorkout = async (req, res) => {
             duration,
         });
 
+        console.log("sets ", sets);
+
+        const prompt = `
+      You are a Workout calories tracker expert.
+
+      Analyze this workout and give me the calories burned:
+
+      "Workout Name ${workoutName}"
+      "Sets ${sets}"
+      "Duration ${duration}"
+
+      Return ONLY valid JSON.
+
+      Format:
+      {
+        "caloriesBurned": number
+      }
+    `;
+
+        let { caloriesBurned } = await generativeModel(prompt)
+        console.log(caloriesBurned, "This is calories");
+
         // ====================================
         // UPDATE TOTAL DURATION
         // ====================================
@@ -75,6 +98,7 @@ export const addWorkout = async (req, res) => {
             {
                 $inc: {
                     totalDuration: duration || 0,
+                    caloriesBurned: caloriesBurned || 0,
                 },
             }
         );

@@ -29,7 +29,7 @@ export const updateProfile = async (req, res) => {
             (error, result) => {
               if (error) {
                 reject(error);
-                console.log(error);
+                // console.log(error);
 
               } else {
                 resolve(result);
@@ -123,7 +123,7 @@ export const updateProfile = async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error);
+    // console.log(error); 
 
     return res.status(500).json({
       message: "Internal Server Error"

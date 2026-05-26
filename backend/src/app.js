@@ -9,6 +9,7 @@ import authRoutes from './routes/auth.routes.js'
 import userRoutes from "./routes/user.routes.js"
 import nutritionRoutes from "./routes/nutrition.routes.js"
 import workoutRoutes from "./routes/workout.routes.js"
+import waterRoutes from "./routes/waterIntake.route.js"
 import jwtVerification from "./middleware/jwtVerification.js"
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
@@ -35,7 +36,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/nutrition", nutritionRoutes)
 app.use("/api/workout", workoutRoutes)
-
+app.use("/api/water", waterRoutes)
 
 
 app.use((err, req, res, next) => {

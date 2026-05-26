@@ -20,8 +20,8 @@ export const generativeModel = async (prompt) => {
         text = text.replace(/```json/g, "");
         text = text.replace(/```/g, "");
 
-        const nutritionData = JSON.parse(text);
-        return nutritionData;
+        const Data = JSON.parse(text);
+        return Data;
 
     } catch (error) {
         console.log("Gemini Error ", error);
